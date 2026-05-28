@@ -13,7 +13,7 @@ def show_family():
     </div>
     """, unsafe_allow_html=True)
 
-    tabs = st.tabs(["📊  Resumen", "📬  Enviar una nota", "⚙️  Configuración"])
+    tabs = st.tabs(["📊  Resumen", "📬  Enviar una nota", "⚙️  Configuración", "📸 Añadir recuerdo"])
 
     # ── OVERVIEW TAB ──
     with tabs[0]:
@@ -147,4 +147,33 @@ def show_family():
             if st.button("Guardar notificaciones"):
                 st.success("Preferencias de notificación guardadas ✓")
             st.markdown('</div>', unsafe_allow_html=True)
+
+
+    # ── AÑADIR RECUERDOS TAB ──
+    with tabs[3]:
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">Añadir una nueva foto para la sesión</div>', unsafe_allow_html=True)
+        
+        foto = st.file_uploader("Sube una imagen", type=["jpg", "png", "jpeg"])
+        pregunta = st.text_input("¿Qué quieres preguntarle? (ej: ¿Quién es este niño?)")
+        correcta = st.text_input("Respuesta correcta (ej: Tu nieto Liam)")
+        incorrectas = st.text_input("Opciones incorrectas separadas por comas (ej: Tu hijo Juan, El vecino, Un amigo)")
+        
+        if st.button("Guardar Recuerdo", type="primary"):
+            if foto and pregunta and correcta and incorrectas:
+                # Convertimos las incorrectas en una lista y añadimos la correcta
+                opciones = [opt.strip() for opt in incorrectas.split(",")]
+                opciones.append(correcta)
+                
+                nuevo_recuerdo = {
+                    "image_file": foto, # Guardamos el archivo subido
+                    "question": pregunta,
+                    "correct": correcta,
+                    "options": opciones
+                }
+                st.session_state.custom_questions.append(nuevo_recuerdo)
+                st.success("¡Recuerdo añadido con éxito! Aparecerá en la próxima sesión.")
+            else:
+                st.warning("Por favor, rellena todos los campos y sube una foto.")
+        st.markdown('</div>', unsafe_allow_html=True)
     pass

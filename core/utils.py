@@ -481,6 +481,8 @@ questions = [
         "options": ["Your nurse, Ana", "Your daughter Susan", "A volunteer", "Dr. Rivera"],
     },
 ]
+    if "custom_questions" not in st.session_state:
+        st.session_state.custom_questions = []
 
 def topbar(mode_label, mode_class, back=True):
     col1, col2, col3 = st.columns([1, 3, 1])

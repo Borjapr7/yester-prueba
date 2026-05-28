@@ -15,25 +15,28 @@ def show_elder():
     <div class="elder-subtext">Vamos a hacer un ejercicio de memoria juntos.</div>
     """, unsafe_allow_html=True)
 
+    # Usar las preguntas personalizadas si las hay, si no, usar las por defecto
+    lista_preguntas = st.session_state.custom_questions if "custom_questions" in st.session_state and len(st.session_state.custom_questions) > 0 else questions
+
     # Streak bar
     answers = st.session_state.answers
     streak_html = '<div class="streak-bar"><span style="font-size:0.85rem;color:#8a7060;margin-right:0.4rem;">Hoy:</span>'
-    for i in range(len(questions)):
+    for i in range(len(lista_preguntas)):
         if i < len(answers):
             cls = "correct" if answers[i] else "wrong"
         else:
             cls = "empty"
         streak_html += f'<span class="streak-dot {cls}"></span>'
-    streak_html += f'<span style="margin-left:auto;font-size:0.85rem;color:#8a7060;">{len([a for a in answers if a])}/{len(questions)} correct</span></div>'
+    streak_html += f'<span style="margin-left:auto;font-size:0.85rem;color:#8a7060;">{len([a for a in answers if a])}/{len(lista_preguntas)} correct</span></div>'
     st.markdown(streak_html, unsafe_allow_html=True)
 
     q_idx = st.session_state.q_index
 
     # All done
-    if q_idx >= len(questions):
+    if q_idx >= len(lista_preguntas):
         correct = sum(1 for a in st.session_state.answers if a)
-        total = len(questions)
-        pct = int(correct / total * 100)
+        total = len(lista_preguntas)
+        pct = int(correct / total * 100) if total > 0 else 0
         if pct >= 70:
             emoji, msg, bg = "🎉", "¡Lo has hecho genial hoy!", "linear-gradient(135deg,#e8f5ee,#d0eedd)"
         elif pct >= 40:
@@ -59,7 +62,7 @@ def show_elder():
                 st.rerun()
         return
 
-    q = questions[q_idx]
+    q = lista_preguntas[q_idx]
 
     # Show feedback overlay first
     if st.session_state.show_feedback:
@@ -91,20 +94,28 @@ def show_elder():
     col_main, col_side = st.columns([2, 1], gap="large")
 
     with col_main:
-        st.markdown(f"""
-        <div class="photo-frame">
+        st.markdown('<div class="photo-frame">', unsafe_allow_html=True)
+        
+        # Comprobar si es una pregunta con imagen real (subida) o un mock por defecto
+        if "image_file" in q:
+            # Mostramos la imagen subida
+            st.image(q["image_file"], use_container_width=True)
+        else:
+            # Mostramos el degradado por defecto
+            st.markdown(f"""
             <div class="photo-placeholder" style="background:{q['photo_bg']};">
                 <span style="font-size:5rem;">{q['photo_emoji']}</span>
             </div>
-            <div class="photo-question">{q['question']}</div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
+            
+        st.markdown(f'<div class="photo-question" style="margin-top:1.5rem;">{q["question"]}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col_side:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style="font-family:'Fraunces',serif;font-size:1.1rem;color:#8a7060;margin-bottom:1rem;">
-            Pregunta {q_idx + 1} de {len(questions)}
+            Pregunta {q_idx + 1} de {len(lista_preguntas)}
         </div>
         """, unsafe_allow_html=True)
 
@@ -135,5 +146,3 @@ def show_elder():
                 </div>
             </div>
             """, unsafe_allow_html=True)
-
-    pass
