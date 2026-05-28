@@ -413,6 +413,7 @@ def init_state():
         "answers": [],
         "show_feedback": False,
         "last_correct": None,
+        "custom_questions": [],
         "notes": [
             {"from": "Susan (daughter)", "text": "We miss you Mum! See you Sunday 🌸", "time": "Today, 9:12 AM"},
             {"from": "Dr. Rivera", "text": "Great job this week, keep up the exercises!", "time": "Yesterday"},
@@ -481,13 +482,11 @@ questions = [
         "options": ["Your nurse, Ana", "Your daughter Susan", "A volunteer", "Dr. Rivera"],
     },
 ]
-    if "custom_questions" not in st.session_state:
-        st.session_state.custom_questions = []
 
 def topbar(mode_label, mode_class, back=True):
     col1, col2, col3 = st.columns([1, 3, 1])
     with col1:
-        if back and st.button("← Atrás", key="back_btn"):
+        if back and st.button("← Back", key="back_btn"):
             st.session_state.mode = None
             st.session_state.q_index = 0
             st.session_state.answers = []
@@ -496,7 +495,7 @@ def topbar(mode_label, mode_class, back=True):
     with col2:
         st.markdown(f"""
         <div class="topbar">
-            <span class="topbar-logo">Yester<span>
+            <span class="topbar-logo">Memo<span>ria</span></span>
             <span class="topbar-mode {mode_class}">{mode_label}</span>
         </div>
         """, unsafe_allow_html=True)
