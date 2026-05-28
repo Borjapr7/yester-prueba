@@ -82,24 +82,23 @@ def show_medical():
         col_chart, col_dist = st.columns([3, 2], gap="large")
 
         with col_chart:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">📅 Precisión semanal por paciente</div>', unsafe_allow_html=True)
-            # Mini bar chart via HTML
-            chart_html = '<div style="display:flex;flex-direction:column;gap:0.6rem;">'
-            for p in patients:
-                bar_color = score_color(p['score_week'])
-                chart_html += f"""
-                <div style="display:flex;align-items:center;gap:0.8rem;font-size:0.85rem;">
-                    <span style="min-width:90px;color:#4a5060;">{p['name'].split()[0]} {p['name'].split()[1][0]}.</span>
-                    <div style="flex:1;background:#f0f2f5;border-radius:100px;height:10px;">
-                        <div style="width:{p['score_week']}%;background:{bar_color};border-radius:100px;height:10px;"></div>
-                    </div>
-                    <span style="min-width:38px;text-align:right;font-weight:600;color:{bar_color};">{p['score_week']}%</span>
-                </div>
-                """
-            chart_html += '</div>'
-            st.markdown(chart_html, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+                    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+                    st.markdown('<div class="section-title">📅 Precisión semanal por paciente</div>', unsafe_allow_html=True)
+                    # Mini bar chart via HTML
+                    chart_html = '<div style="display:flex;flex-direction:column;gap:0.6rem;">'
+                    for p in patients:
+                        bar_color = score_color(p['score_week'])
+                        # El HTML debe ir sin indentar para que Markdown no lo trate como un bloque de código
+                        chart_html += f"""<div style="display:flex;align-items:center;gap:0.8rem;font-size:0.85rem;">
+        <span style="min-width:90px;color:#4a5060;">{p['name'].split()[0]} {p['name'].split()[1][0]}.</span>
+        <div style="flex:1;background:#f0f2f5;border-radius:100px;height:10px;">
+        <div style="width:{p['score_week']}%;background:{bar_color};border-radius:100px;height:10px;"></div>
+        </div>
+        <span style="min-width:38px;text-align:right;font-weight:600;color:{bar_color};">{p['score_week']}%</span>
+        </div>"""
+                    chart_html += '</div>'
+                    st.markdown(chart_html, unsafe_allow_html=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
 
         with col_dist:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
