@@ -1,0 +1,139 @@
+import streamlit as st
+import random
+import datetime
+from core.utils import topbar, questions, score_color
+
+def show_elder():
+    topbar("My Space 🌸", "elder")
+
+    name = st.session_state.elder_name
+    hour = datetime.datetime.now().hour
+    greeting = "Good morning" if hour < 12 else ("Good afternoon" if hour < 17 else "Good evening")
+
+    st.markdown(f"""
+    <div class="elder-greeting">{greeting}, {name} 🌸</div>
+    <div class="elder-subtext">Let's do a little memory exercise together.</div>
+    """, unsafe_allow_html=True)
+
+    # Streak bar
+    answers = st.session_state.answers
+    streak_html = '<div class="streak-bar"><span style="font-size:0.85rem;color:#8a7060;margin-right:0.4rem;">Today:</span>'
+    for i in range(len(questions)):
+        if i < len(answers):
+            cls = "correct" if answers[i] else "wrong"
+        else:
+            cls = "empty"
+        streak_html += f'<span class="streak-dot {cls}"></span>'
+    streak_html += f'<span style="margin-left:auto;font-size:0.85rem;color:#8a7060;">{len([a for a in answers if a])}/{len(questions)} correct</span></div>'
+    st.markdown(streak_html, unsafe_allow_html=True)
+
+    q_idx = st.session_state.q_index
+
+    # All done
+    if q_idx >= len(questions):
+        correct = sum(1 for a in st.session_state.answers if a)
+        total = len(questions)
+        pct = int(correct / total * 100)
+        if pct >= 70:
+            emoji, msg, bg = "🎉", "Wonderful job today!", "linear-gradient(135deg,#e8f5ee,#d0eedd)"
+        elif pct >= 40:
+            emoji, msg, bg = "💛", "Good effort, keep going!", "linear-gradient(135deg,#fef8e8,#fde8c0)"
+        else:
+            emoji, msg, bg = "🌱", "We'll practise together tomorrow.", "linear-gradient(135deg,#fef5ee,#fde8d8)"
+        st.markdown(f"""
+        <div style="background:{bg};border-radius:24px;padding:3rem;text-align:center;margin-top:1rem;">
+            <div style="font-size:4rem;">{emoji}</div>
+            <div style="font-family:'Fraunces',serif;font-size:2.2rem;color:#2d2318;margin:0.8rem 0;">{msg}</div>
+            <div style="font-size:1.3rem;color:#5a4030;margin-bottom:1.5rem;">
+                You got <strong>{correct} out of {total}</strong> — {pct}%
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("🔄  Play Again", use_container_width=True, type="primary"):
+                st.session_state.q_index = 0
+                st.session_state.answers = []
+                st.session_state.show_feedback = False
+                st.rerun()
+        return
+
+    q = questions[q_idx]
+
+    # Show feedback overlay first
+    if st.session_state.show_feedback:
+        correct_ans = st.session_state.last_correct
+        if correct_ans:
+            st.markdown("""
+            <div class="feedback-success">
+                <div class="feedback-emoji">✅</div>
+                <div class="feedback-text">That's right! Well done!</div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class="feedback-fail">
+                <div class="feedback-emoji">💛</div>
+                <div class="feedback-text">That was <em>{q['correct']}</em>. No worries!</div>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("Next Question →", use_container_width=True, type="primary", key="next_q"):
+                st.session_state.q_index += 1
+                st.session_state.show_feedback = False
+                st.rerun()
+        return
+
+    # Question card
+    col_main, col_side = st.columns([2, 1], gap="large")
+
+    with col_main:
+        st.markdown(f"""
+        <div class="photo-frame">
+            <div class="photo-placeholder" style="background:{q['photo_bg']};">
+                <span style="font-size:5rem;">{q['photo_emoji']}</span>
+            </div>
+            <div class="photo-question">{q['question']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col_side:
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style="font-family:'Fraunces',serif;font-size:1.1rem;color:#8a7060;margin-bottom:1rem;">
+            Question {q_idx + 1} of {len(questions)}
+        </div>
+        """, unsafe_allow_html=True)
+
+        options = q["options"].copy()
+        random.seed(q_idx * 42)
+        random.shuffle(options)
+
+        for opt in options:
+            is_correct = opt == q["correct"]
+            if st.button(f"  {opt}", key=f"opt_{q_idx}_{opt}", use_container_width=True):
+                st.session_state.answers.append(is_correct)
+                st.session_state.last_correct = is_correct
+                st.session_state.show_feedback = True
+                st.rerun()
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        # Notes from family
+        if st.session_state.notes:
+            st.markdown(f"""
+            <div style="background:#fffbf5;border:1px solid #f0e4d0;border-radius:14px;padding:1rem;">
+                <div style="font-size:0.8rem;font-weight:600;color:#c4753a;letter-spacing:0.05em;
+                            text-transform:uppercase;margin-bottom:0.6rem;">📬 Message for you</div>
+                <div style="font-size:0.9rem;color:#4a3728;">
+                    {st.session_state.notes[0]['text']}
+                </div>
+                <div style="font-size:0.75rem;color:#b0a090;margin-top:0.4rem;">
+                    — {st.session_state.notes[0]['from']}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    pass
