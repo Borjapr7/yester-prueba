@@ -7,13 +7,13 @@ def show_medical():
     topbar("Care Team 🏥", "medical")
 
     st.markdown("""
-    <div class="medical-header">Patient Overview</div>
+    <div class="medical-header">Resumen de pacientes</div>
     <div style="color:#8a9ab0;font-size:0.95rem;margin-bottom:1.5rem;">
-        Cedar Grove Memory Care Centre · Week of {week}
+        Centro de Memoria Los Almendros · Semana del {week}
     </div>
     """.format(week=datetime.datetime.now().strftime("%b %d, %Y")), unsafe_allow_html=True)
 
-    tabs = st.tabs(["👥  All Patients", "📈  Analytics", "⚙️  Configuration"])
+    tabs = st.tabs(["👥  Todos los pacientes", "📈  Análisis", "⚙️  Configuración"])
 
     patients = st.session_state.patients
 
@@ -21,11 +21,11 @@ def show_medical():
     with tabs[0]:
         col_filter, _ = st.columns([2, 3])
         with col_filter:
-            status_filter = st.selectbox("Filter by status", ["All", "Stable", "Needs Attention", "Hard Day"],
+            status_filter = st.selectbox("Filtrar por estado", ["Todos", "Estable", "Necesita atención", "Día difícil"],
                                          label_visibility="collapsed")
 
-        status_map = {"All": None, "Stable": "stable", "Needs Attention": "concern", "Hard Day": "hard"}
-        filtered = patients if status_filter == "All" else [p for p in patients if p["status"] == status_map[status_filter]]
+        status_map = {"Todos": None, "Estable": "stable", "Necesita atención": "concern", "Día difícil": "hard"}
+        filtered = patients if status_filter == "Todos" else [p for p in patients if p["status"] == status_map[status_filter]]
 
         for p in filtered:
             col_card, col_action = st.columns([4, 1])
@@ -40,7 +40,7 @@ def show_medical():
                     </div>
                     <div style="flex:1;">
                         <div class="patient-name">{p['name']} <span style="color:#b0a0b0;font-weight:400;font-size:0.85rem;">· {p['age']} yrs</span></div>
-                        <div class="patient-meta">Last session: {p['last']} &nbsp;·&nbsp; {p['sessions_week']} sessions this week</div>
+                        <div class="patient-meta">Última sesión: {p['last']} &nbsp;·&nbsp; {p['sessions_week']} sesiones esta semana</div>
                     </div>
                     <div style="text-align:right;min-width:110px;">
                         <div style="font-family:'Fraunces',serif;font-size:1.6rem;font-weight:300;
@@ -49,24 +49,24 @@ def show_medical():
                     </div>
                     <div>
                         <span class="status-badge {p['status']}">
-                            {'Stable' if p['status']=='stable' else 'Attention' if p['status']=='concern' else 'Hard Day'}
+                            {'Estable' if p['status']=='stable' else 'Atención' if p['status']=='concern' else 'Día difícil'}
                         </span>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
             with col_action:
                 st.markdown("<br>", unsafe_allow_html=True)
-                if st.button("View", key=f"view_{p['name']}", use_container_width=True):
-                    st.info(f"📋 Patient detail view for **{p['name']}** — full EHR integration in production.")
+                if st.button("Ver", key=f"view_{p['name']}", use_container_width=True):
+                    st.info(f"📋 Vista de detalle del paciente para **{p['name']}** — integración completa con EHR en producción.")
 
     # ── ANALYTICS TAB ──
     with tabs[1]:
         c1, c2, c3, c4 = st.columns(4)
         facility_metrics = [
-            ("4.2", "Avg sessions / patient", "#3d5a80", "this week"),
-            ("64%", "Facility avg. accuracy", score_color(64), "↑ 3% vs last week"),
-            ("2", "Patients needing review", "#c4503a", "Robert & James"),
-            ("83%", "Session completion rate", "#2d7a5f", "↑ 5% vs last week"),
+            ("4.2", "Sesiones / paciente", "#3d5a80", "esta semana"),
+            ("64%", "Precisión promedio del centro", score_color(64), "↑ 3% vs la semana pasada"),
+            ("2", "Pacientes que necesitan revisión", "#c4503a", "Robert y James"),
+            ("83%", "Tasa de finalización de sesiones", "#2d7a5f", "↑ 5% vs la semana pasada"),
         ]
         for col, (val, label, color, sub) in zip([c1, c2, c3, c4], facility_metrics):
             with col:
@@ -83,7 +83,7 @@ def show_medical():
 
         with col_chart:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">📅 Weekly Accuracy per Patient</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">📅 Precisión semanal por paciente</div>', unsafe_allow_html=True)
             # Mini bar chart via HTML
             chart_html = '<div style="display:flex;flex-direction:column;gap:0.6rem;">'
             for p in patients:
@@ -103,13 +103,13 @@ def show_medical():
 
         with col_dist:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">🩺 Status Distribution</div>', unsafe_allow_html=True)
-            statuses = {"stable": 0, "concern": 0, "hard": 0}
+            st.markdown('<div class="section-title">🩺 Distribución de estados</div>', unsafe_allow_html=True)
+            statuses = {"estable": 0, "concern": 0, "hard": 0}
             for p in patients:
                 statuses[p["status"]] += 1
             total_p = len(patients)
             for status, count in statuses.items():
-                label = {"stable": "Stable 🟢", "concern": "Needs Attention 🟡", "hard": "Hard Day 🔴"}[status]
+                label = {"estable": "Estable 🟢", "concern": "Necesita atención 🟡", "hard": "Día difícil 🔴"}[status]
                 color = {"stable": "#2d7a5f", "concern": "#b87d0d", "hard": "#c4503a"}[status]
                 pct = int(count / total_p * 100)
                 st.markdown(f"""
@@ -128,39 +128,39 @@ def show_medical():
         col_cfg1, col_cfg2 = st.columns(2, gap="large")
         with col_cfg1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">🏥 Facility Defaults</div>', unsafe_allow_html=True)
-            st.selectbox("Default difficulty", ["Easy", "Medium", "Hard"], index=1)
-            st.slider("Default sessions per day", 1, 5, 2)
-            st.slider("Default questions per session", 5, 20, 10)
-            st.toggle("Allow family to adjust settings", value=True)
-            st.toggle("Auto-flag patients below 40%", value=True)
-            if st.button("Save Facility Defaults", type="primary"):
-                st.success("Defaults saved across all patients ✓")
+            st.markdown('<div class="section-title">🏥 Predeterminados del centro</div>', unsafe_allow_html=True)
+            st.selectbox("Dificultad predeterminada", ["Fácil", "Medio", "Difícil"], index=1)
+            st.slider("Sesiones predeterminadas por día", 1, 5, 2)
+            st.slider("Preguntas predeterminadas por sesión", 5, 20, 10)
+            st.toggle("Permitir que la familia ajuste la configuración", value=True)
+            st.toggle("Marcar automáticamente a los pacientes por debajo del 40%", value=True)
+            if st.button("Guardar predeterminados del centro", type="primary"):
+                st.success("Predeterminados guardados en todos los pacientes ✓")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_cfg2:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">📤 Reports & Alerts</div>', unsafe_allow_html=True)
-            st.toggle("Weekly PDF report to medical team", value=True)
-            st.toggle("Alert on missed sessions (2+ days)", value=True)
-            st.toggle("Daily summary to care staff", value=False)
-            st.text_input("Medical team email", value="team@cedargrove.care")
-            st.selectbox("Report delivery", ["Weekly (Monday)", "Daily", "Monthly"])
-            if st.button("Save Report Settings"):
-                st.success("Report settings updated ✓")
+            st.markdown('<div class="section-title">📤 Informes y alertas</div>', unsafe_allow_html=True)
+            st.toggle("Enviar informe PDF semanal al equipo médico", value=True)
+            st.toggle("Alertar sobre sesiones perdidas (más de 2 días)", value=True)
+            st.toggle("Enviar resumen diario al personal de atención", value=False)
+            st.text_input("Email del equipo médico", value="[EMAIL_ADDRESS]")
+            st.selectbox("Entrega de informes", ["Semanal (lunes)", "Diario", "Mensual"])
+            if st.button("Guardar configuración de informes"):
+                st.success("Configuración de informes actualizada ✓")
             st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">👤 Override Settings per Patient</div>', unsafe_allow_html=True)
-        sel_patient = st.selectbox("Select patient", [p["name"] for p in patients])
+        st.markdown('<div class="section-title">👤 Ajustes de override por paciente</div>', unsafe_allow_html=True)
+        sel_patient = st.selectbox("Seleccionar paciente", [p["name"] for p in patients])
         col_p1, col_p2, col_p3 = st.columns(3)
         with col_p1:
-            st.selectbox("Difficulty", ["Easy", "Medium", "Hard"], key="p_diff")
+            st.selectbox("Dificultad", ["Fácil", "Medio", "Difícil"], key="p_diff")
         with col_p2:
-            st.slider("Sessions / day", 1, 5, 2, key="p_sess")
+            st.slider("Sesiones / día", 1, 5, 2, key="p_sess")
         with col_p3:
-            st.slider("Questions / session", 5, 20, 10, key="p_qlen")
-        if st.button(f"Apply to {sel_patient}", type="primary"):
-            st.success(f"Settings applied to {sel_patient} ✓")
+            st.slider("Preguntas / sesión", 5, 20, 10, key="p_qlen")
+        if st.button(f"Aplicar a {sel_patient}", type="primary"):
+            st.success(f"Ajustes aplicados a {sel_patient} ✓")
         st.markdown('</div>', unsafe_allow_html=True)
     pass

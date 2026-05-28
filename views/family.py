@@ -7,13 +7,13 @@ def show_family():
     topbar("Family View 🏡", "family")
 
     st.markdown(f"""
-    <div class="family-header">Hi Susan 👋</div>
+    <div class="family-header">Hola familia 👋  </div>
     <div style="color:#6a8070;font-size:1rem;margin-bottom:1.5rem;">
-        Here's how <strong>{st.session_state.elder_name}</strong> is doing this week.
+        Aquí tienes un resumen de cómo está <strong>{st.session_state.elder_name}</strong> esta semana.
     </div>
     """, unsafe_allow_html=True)
 
-    tabs = st.tabs(["📊  Overview", "📬  Send a Note", "⚙️  Settings"])
+    tabs = st.tabs(["📊  Resumen", "📬  Enviar una nota", "⚙️  Configuración"])
 
     # ── OVERVIEW TAB ──
     with tabs[0]:
@@ -26,10 +26,10 @@ def show_family():
 
         c1, c2, c3, c4 = st.columns(4)
         metrics = [
-            (str(len(sessions)), "Sessions this week", "#2d7a5f"),
-            (f"{avg_pct}%", "Avg. accuracy", score_color(avg_pct)),
-            (str(streak), "Days above 60%", "#3d5a80"),
-            ("12 min", "Avg. duration", "#b87d0d"),
+            (str(len(sessions)), "Sesiones esta semana", "#2d7a5f"),
+            (f"{avg_pct}%", "Precisión media", score_color(avg_pct)),
+            (str(streak), "Días por encima del 60%", "#3d5a80"),
+            ("12 min", "Duración media", "#b87d0d"),
         ]
         for col, (val, label, color) in zip([c1, c2, c3, c4], metrics):
             with col:
@@ -82,29 +82,29 @@ def show_family():
     # ── NOTES TAB ──
     with tabs[1]:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown(f'<div class="section-title">📬 Send a message to {st.session_state.elder_name}</div>',
+        st.markdown(f'<div class="section-title">📬 Enviar una nota a {st.session_state.elder_name}</div>',
                     unsafe_allow_html=True)
-        st.caption("Your note will appear on her screen during her next session — a little warm reminder she's loved.")
-        note_text = st.text_area("Write your message…", height=100, placeholder="Hi Mum, thinking of you! 💛",
+        st.caption("Tu nota aparecerá en su pantalla durante la próxima sesión, un pequeño recordatorio cariñoso de que la quieres.")
+        note_text = st.text_area("Escribe tu mensaje…", height=100, placeholder="Hola mamá, ¡pensando en ti! 💛",
                                  label_visibility="collapsed")
         col_a, col_b = st.columns([1, 3])
         with col_a:
-            if st.button("Send Note 💌", type="primary", use_container_width=True):
+            if st.button("Enviar nota 💌", type="primary", use_container_width=True):
                 if note_text.strip():
                     new_note = {
-                        "from": "Susan (daughter)",
+                        "from": "Familia",
                         "text": note_text.strip(),
-                        "time": "Just now"
+                        "time": "Justo ahora"
                     }
                     st.session_state.notes.insert(0, new_note)
-                    st.success("✅ Your note was sent! It will appear on her next session.")
+                    st.success("✅ Tu nota fue enviada. Aparecerá en la próxima sesión.")
                 else:
-                    st.warning("Please write something first.")
+                    st.warning("Por favor, escribe algo antes.")
         st.markdown('</div>', unsafe_allow_html=True)
 
         if st.session_state.notes:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">📜 Sent Notes</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">📜 Notas enviadas</div>', unsafe_allow_html=True)
             for note in st.session_state.notes:
                 st.markdown(f"""
                 <div class="note-bubble" style="margin-top:1.2rem;">
@@ -121,30 +121,30 @@ def show_family():
         col_s1, col_s2 = st.columns(2, gap="large")
         with col_s1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">🎛️ Session Settings</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">🎛️ Ajustes de sesión</div>', unsafe_allow_html=True)
             st.session_state.difficulty = st.selectbox(
-                "Difficulty level",
-                ["Easy", "Medium", "Hard"],
-                index=["Easy", "Medium", "Hard"].index(st.session_state.difficulty)
+                "Nivel de dificultad",
+                ["Fácil", "Normal", "Difícil"],
+                index=["Fácil", "Normal", "Difícil"].index(st.session_state.difficulty)
             )
             st.session_state.daily_sessions = st.slider(
-                "Sessions per day", 1, 5, st.session_state.daily_sessions
+                "Sesiones por día", 1, 5, st.session_state.daily_sessions
             )
             st.session_state.session_length = st.slider(
-                "Questions per session", 5, 20, st.session_state.session_length
+                "Preguntas por sesión", 5, 20, st.session_state.session_length
             )
-            if st.button("Save Settings", type="primary"):
-                st.success("Settings updated ✓")
+            if st.button("Guardar cambios", type="primary"):
+                st.success("Ajustes actualizados ✓")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_s2:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">🔔 Notifications</div>', unsafe_allow_html=True)
-            st.toggle("Email me daily summary", value=True)
-            st.toggle("Alert if session is missed", value=True)
-            st.toggle("Alert if score drops below 40%", value=False)
-            st.text_input("Your email", value="susan@example.com")
-            if st.button("Save Notifications"):
-                st.success("Notification preferences saved ✓")
+            st.markdown('<div class="section-title">🔔 Notificaciones</div>', unsafe_allow_html=True)
+            st.toggle("Enviar resumen diario por email", value=True)
+            st.toggle("Enviar alerta si se pierde una sesión", value=True)
+            st.toggle("Enviar alerta si la precisión baja del 40%", value=False)
+            st.text_input("Tu email", value="[EMAIL_ADDRESS]")
+            if st.button("Guardar notificaciones"):
+                st.success("Preferencias de notificación guardadas ✓")
             st.markdown('</div>', unsafe_allow_html=True)
     pass

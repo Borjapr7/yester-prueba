@@ -24,7 +24,7 @@ def show_landing():
     st.markdown("""
     <div class="landing-hero">
         <div class="landing-logo">Yester<span></span></div>
-        <div class="landing-tagline">Gentle memory care, every day</div>
+        <div class="landing-tagline">Cuidamos tus recuerdos cada día</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -34,11 +34,11 @@ def show_landing():
         st.markdown("""
         <div class="mode-card elder">
             <div class="mode-icon">🌸</div>
-            <div class="mode-title">My Space</div>
-            <div class="mode-desc">For residents — gentle photo exercises and daily memory activities at your own pace.</div>
+            <div class="mode-title">Portal del Paciente</div>
+            <div class="mode-desc">Ejercicios suaves con fotos y actividades diarias para mantener la mente activa y feliz.</div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Enter My Space", key="elder_btn", use_container_width=True,
+        if st.button("Comenzar", key="elder_btn", use_container_width=True,
                      type="primary"):
             st.session_state.mode = "elder"
             st.rerun()
@@ -47,11 +47,11 @@ def show_landing():
         st.markdown("""
         <div class="mode-card family">
             <div class="mode-icon">🏡</div>
-            <div class="mode-title">Family View</div>
-            <div class="mode-desc">For families — check on your loved one, send notes, and adjust their settings.</div>
+            <div class="mode-title">Para la Familia</div>
+            <div class="mode-desc">Recibe actualizaciones, comparte mensajes y acompaña el bienestar de tu ser querido.</div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Family Dashboard", key="family_btn", use_container_width=True):
+        if st.button("Acceder a unidad familiar", key="family_btn", use_container_width=True):
             st.session_state.mode = "family"
             st.rerun()
 
@@ -59,18 +59,18 @@ def show_landing():
         st.markdown("""
         <div class="mode-card medical">
             <div class="mode-icon">🏥</div>
-            <div class="mode-title">Care Team</div>
-            <div class="mode-desc">For clinicians — patient overview, analytics, trends, and care configuration.</div>
+            <div class="mode-title">Para el Equipo Clínico</div>
+            <div class="mode-desc">Seguimiento del bienestar, análisis de progreso y configuración de cuidados centrados en la persona.</div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Care Portal", key="medical_btn", use_container_width=True):
+        if st.button("Acceder a portal clínico", key="medical_btn", use_container_width=True):
             st.session_state.mode = "medical"
             st.rerun()
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown("""
     <div style='text-align:center; color:#b0a090; font-size:0.8rem; font-style:italic;'>
-        Yester — Compassionate cognitive support · MVP Demo
+        Yester — Apoyo cognitivo respetuoso· MVP Demo
     </div>
     """, unsafe_allow_html=True)
 

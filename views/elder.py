@@ -8,11 +8,11 @@ def show_elder():
 
     name = st.session_state.elder_name
     hour = datetime.datetime.now().hour
-    greeting = "Good morning" if hour < 12 else ("Good afternoon" if hour < 17 else "Good evening")
+    greeting = "Buenos días" if hour < 12 else ("Buenas tardes" if hour < 17 else "Buenas noches")
 
     st.markdown(f"""
     <div class="elder-greeting">{greeting}, {name} 🌸</div>
-    <div class="elder-subtext">Let's do a little memory exercise together.</div>
+    <div class="elder-subtext">Vamos a hacer un ejercicio de memoria juntos.</div>
     """, unsafe_allow_html=True)
 
     # Streak bar
@@ -35,24 +35,24 @@ def show_elder():
         total = len(questions)
         pct = int(correct / total * 100)
         if pct >= 70:
-            emoji, msg, bg = "🎉", "Wonderful job today!", "linear-gradient(135deg,#e8f5ee,#d0eedd)"
+            emoji, msg, bg = "🎉", "¡Lo has hecho genial hoy!", "linear-gradient(135deg,#e8f5ee,#d0eedd)"
         elif pct >= 40:
-            emoji, msg, bg = "💛", "Good effort, keep going!", "linear-gradient(135deg,#fef8e8,#fde8c0)"
+            emoji, msg, bg = "💛", "¡Buen esfuerzo, sigue así!", "linear-gradient(135deg,#fef8e8,#fde8c0)"
         else:
-            emoji, msg, bg = "🌱", "We'll practise together tomorrow.", "linear-gradient(135deg,#fef5ee,#fde8d8)"
+            emoji, msg, bg = "🌱", "Practicaremos juntos mañana.", "linear-gradient(135deg,#fef5ee,#fde8d8)"
         st.markdown(f"""
         <div style="background:{bg};border-radius:24px;padding:3rem;text-align:center;margin-top:1rem;">
             <div style="font-size:4rem;">{emoji}</div>
             <div style="font-family:'Fraunces',serif;font-size:2.2rem;color:#2d2318;margin:0.8rem 0;">{msg}</div>
             <div style="font-size:1.3rem;color:#5a4030;margin-bottom:1.5rem;">
-                You got <strong>{correct} out of {total}</strong> — {pct}%
+                Has acertado <strong>{correct} de {total}</strong> — {pct}%
             </div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("🔄  Play Again", use_container_width=True, type="primary"):
+            if st.button("🔄  Volver a empezar", use_container_width=True, type="primary"):
                 st.session_state.q_index = 0
                 st.session_state.answers = []
                 st.session_state.show_feedback = False
@@ -68,20 +68,20 @@ def show_elder():
             st.markdown("""
             <div class="feedback-success">
                 <div class="feedback-emoji">✅</div>
-                <div class="feedback-text">That's right! Well done!</div>
+                <div class="feedback-text">¡Eso es! ¡Muy bien hecho!</div>
             </div>
             """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
             <div class="feedback-fail">
                 <div class="feedback-emoji">💛</div>
-                <div class="feedback-text">That was <em>{q['correct']}</em>. No worries!</div>
+                <div class="feedback-text">Era <em>{q['correct']}</em>. ¡No pasa nada!</div>
             </div>
             """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("Next Question →", use_container_width=True, type="primary", key="next_q"):
+            if st.button("Siguiente pregunta →", use_container_width=True, type="primary", key="next_q"):
                 st.session_state.q_index += 1
                 st.session_state.show_feedback = False
                 st.rerun()
@@ -104,7 +104,7 @@ def show_elder():
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style="font-family:'Fraunces',serif;font-size:1.1rem;color:#8a7060;margin-bottom:1rem;">
-            Question {q_idx + 1} of {len(questions)}
+            Pregunta {q_idx + 1} de {len(questions)}
         </div>
         """, unsafe_allow_html=True)
 
@@ -126,7 +126,7 @@ def show_elder():
             st.markdown(f"""
             <div style="background:#fffbf5;border:1px solid #f0e4d0;border-radius:14px;padding:1rem;">
                 <div style="font-size:0.8rem;font-weight:600;color:#c4753a;letter-spacing:0.05em;
-                            text-transform:uppercase;margin-bottom:0.6rem;">📬 Message for you</div>
+                            text-transform:uppercase;margin-bottom:0.6rem;">📬 Un mensaje para ti</div>
                 <div style="font-size:0.9rem;color:#4a3728;">
                     {st.session_state.notes[0]['text']}
                 </div>
