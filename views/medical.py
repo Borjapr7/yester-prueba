@@ -4,7 +4,7 @@ import datetime
 from core.utils import topbar, questions, score_color
 
 def show_medical():
-    topbar("Care Team 🏥", "medical")
+    topbar("Equipo Clínico 🏥", "medical")
 
     st.markdown("""
     <div class="medical-header">Resumen de pacientes</div>

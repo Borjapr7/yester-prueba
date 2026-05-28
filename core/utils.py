@@ -485,7 +485,7 @@ questions = [
 def topbar(mode_label, mode_class, back=True):
     col1, col2, col3 = st.columns([1, 3, 1])
     with col1:
-        if back and st.button("← Back", key="back_btn"):
+        if back and st.button("← Atrás", key="back_btn"):
             st.session_state.mode = None
             st.session_state.q_index = 0
             st.session_state.answers = []
@@ -494,7 +494,7 @@ def topbar(mode_label, mode_class, back=True):
     with col2:
         st.markdown(f"""
         <div class="topbar">
-            <span class="topbar-logo">Memo<span>ria</span></span>
+            <span class="topbar-logo">Yester<span>
             <span class="topbar-mode {mode_class}">{mode_label}</span>
         </div>
         """, unsafe_allow_html=True)

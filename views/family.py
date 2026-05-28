@@ -4,7 +4,7 @@ import datetime
 from core.utils import topbar, questions, score_color
 
 def show_family():
-    topbar("Family View 🏡", "family")
+    topbar("Portal Familiar 🏡", "family")
 
     st.markdown(f"""
     <div class="family-header">Hola familia 👋  </div>

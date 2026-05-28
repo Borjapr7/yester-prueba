@@ -4,7 +4,7 @@ import datetime
 from core.utils import topbar, questions, score_color
 
 def show_elder():
-    topbar("My Space 🌸", "elder")
+    topbar("Mi espacio 🌸", "elder")
 
     name = st.session_state.elder_name
     hour = datetime.datetime.now().hour
@@ -17,7 +17,7 @@ def show_elder():
 
     # Streak bar
     answers = st.session_state.answers
-    streak_html = '<div class="streak-bar"><span style="font-size:0.85rem;color:#8a7060;margin-right:0.4rem;">Today:</span>'
+    streak_html = '<div class="streak-bar"><span style="font-size:0.85rem;color:#8a7060;margin-right:0.4rem;">Hoy:</span>'
     for i in range(len(questions)):
         if i < len(answers):
             cls = "correct" if answers[i] else "wrong"
