@@ -437,7 +437,7 @@ def init_state():
             {"name": "Dorothy M.", "age": 74, "avatar": "👵", "status": "stable",
              "score_week": 69, "trend": "+1%", "last": "Yesterday", "sessions_week": 4},
         ],
-        "difficulty": "Medium",
+        "difficulty": "Normal",
         "daily_sessions": 2,
         "session_length": 10,
     }
@@ -495,7 +495,7 @@ def topbar(mode_label, mode_class, back=True):
     with col2:
         st.markdown(f"""
         <div class="topbar">
-            <span class="topbar-logo">Memo<span>ria</span></span>
+            <span class="topbar-logo">Yester<span>
             <span class="topbar-mode {mode_class}">{mode_label}</span>
         </div>
         """, unsafe_allow_html=True)

@@ -104,14 +104,19 @@ def show_medical():
         with col_dist:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             st.markdown('<div class="section-title">🩺 Distribución de estados</div>', unsafe_allow_html=True)
-            statuses = {"estable": 0, "concern": 0, "hard": 0}
+            
+            # CORRECCIÓN AQUÍ: Claves en inglés para coincidir con la base de datos
+            statuses = {"stable": 0, "concern": 0, "hard": 0}
             for p in patients:
                 statuses[p["status"]] += 1
             total_p = len(patients)
+            
             for status, count in statuses.items():
-                label = {"estable": "Estable 🟢", "concern": "Necesita atención 🟡", "hard": "Día difícil 🔴"}[status]
+                # CORRECCIÓN AQUÍ: Traducción visual al iterar
+                label = {"stable": "Estable 🟢", "concern": "Necesita atención 🟡", "hard": "Día difícil 🔴"}[status]
                 color = {"stable": "#2d7a5f", "concern": "#b87d0d", "hard": "#c4503a"}[status]
-                pct = int(count / total_p * 100)
+                pct = int(count / total_p * 100) if total_p > 0 else 0
+                
                 st.markdown(f"""
                 <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem;font-size:0.88rem;">
                     <span style="min-width:120px;color:#4a5060;">{label}</span>
@@ -163,4 +168,3 @@ def show_medical():
         if st.button(f"Aplicar a {sel_patient}", type="primary"):
             st.success(f"Ajustes aplicados a {sel_patient} ✓")
         st.markdown('</div>', unsafe_allow_html=True)
-    pass

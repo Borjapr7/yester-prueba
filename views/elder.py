@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 import datetime
+import base64
 from core.utils import topbar, questions, score_color
 
 def show_elder():
@@ -93,23 +94,33 @@ def show_elder():
     # Question card
     col_main, col_side = st.columns([2, 1], gap="large")
 
+
     with col_main:
-        st.markdown('<div class="photo-frame">', unsafe_allow_html=True)
-        
         # Comprobar si es una pregunta con imagen real (subida) o un mock por defecto
         if "image_file" in q:
-            # Mostramos la imagen subida
-            st.image(q["image_file"], use_container_width=True)
-        else:
-            # Mostramos el degradado por defecto
+            # Convertimos la imagen subida a Base64 para poder meterla en el HTML
+            img_bytes = q["image_file"].getvalue()
+            b64_encoded = base64.b64encode(img_bytes).decode()
+            mime_type = q["image_file"].type
+            
+            # Renderizamos la tarjeta completa en un solo st.markdown
             st.markdown(f"""
-            <div class="photo-placeholder" style="background:{q['photo_bg']};">
-                <span style="font-size:5rem;">{q['photo_emoji']}</span>
+            <div class="photo-frame">
+                <img src="data:{mime_type};base64,{b64_encoded}" style="width:100%; border-radius:16px; margin-bottom:1.5rem; object-fit: cover; max-height: 400px;" />
+                <div class="photo-question">{q['question']}</div>
             </div>
             """, unsafe_allow_html=True)
             
-        st.markdown(f'<div class="photo-question" style="margin-top:1.5rem;">{q["question"]}</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            # Renderizamos el degradado por defecto completo
+            st.markdown(f"""
+            <div class="photo-frame">
+                <div class="photo-placeholder" style="background:{q['photo_bg']};">
+                    <span style="font-size:5rem;">{q['photo_emoji']}</span>
+                </div>
+                <div class="photo-question">{q['question']}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
     with col_side:
         st.markdown("<br>", unsafe_allow_html=True)
